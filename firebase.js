@@ -63,3 +63,4 @@ try {
     console.error(err);
     alert(err.text || err.message);
 }
+}
