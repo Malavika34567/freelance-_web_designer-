@@ -7,7 +7,7 @@ import {
 } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-firestore.js";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyBZ2r4kv9H8KndcEedQfD-kKbndOVNttPQ",
+  apiKey: "YOUR_API_KEY",
   authDomain: "freelance-web-designer-ff920.firebaseapp.com",
   projectId: "freelance-web-designer-ff920",
   storageBucket: "freelance-web-designer-ff920.firebasestorage.app",
@@ -21,35 +21,38 @@ const db = getFirestore(app);
 const form = document.getElementById("contactForm");
 
 form.addEventListener("submit", async (e) => {
-  e.preventDefault();
+    e.preventDefault();
 
-  const data = {
-    name: document.getElementById("name").value,
-    email: document.getElementById("email").value,
-    subject: document.getElementById("subject").value,
-    message: document.getElementById("message").value
-  };
+    const data = {
+        name: document.getElementById("name").value,
+        email: document.getElementById("email").value,
+        subject: document.getElementById("subject").value,
+        message: document.getElementById("message").value
+    };
 
-  try {
-    // Save to Firestore
-    await addDoc(collection(db, "contacts"), {
-      ...data,
-      createdAt: serverTimestamp()
-    });
+    console.log("Data:", data);
 
-    // Send Email
-    await emailjs.send(
-      "Malu@123",          // Service ID
-      "template_vjl2ncj",  // Template ID
-      data
-    );
+    try {
 
-    alert("Thank you! Your message has been sent successfully.");
+        await addDoc(collection(db, "contacts"), {
+            ...data,
+            createdAt: serverTimestamp()
+        });
 
-    form.reset();
+        const response = await emailjs.send(
+            "Malu@123",
+            "template_vjl2ncj",
+            data
+        );
 
-  } catch (error) {
-    console.error(error);
-    alert("Error: " + error.message);
-  }
+        console.log(response);
+
+        alert("Thank you! Your message has been sent successfully.");
+
+        form.reset();
+
+    } catch (err) {
+        console.error(err);
+        alert(err.text || err.message);
+    }
 });
