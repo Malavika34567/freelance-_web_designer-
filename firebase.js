@@ -31,24 +31,25 @@ form.addEventListener("submit", async (e) => {
   };
 
   try {
-    // Firebase
+    // Save to Firestore
     await addDoc(collection(db, "contacts"), {
       ...data,
       createdAt: serverTimestamp()
     });
 
-    // EmailJS
+    // Send Email
     await emailjs.send(
-      "Malu@123",
-      "template_vjl2ncj",
+      "Malu@123",          // Service ID
+      "template_vjl2ncj",  // Template ID
       data
     );
 
-    alert("Message sent successfully!");
+    alert("Thank you! Your message has been sent successfully.");
+
     form.reset();
 
   } catch (error) {
     console.error(error);
-    alert(error.message);
+    alert("Error: " + error.message);
   }
 });
