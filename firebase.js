@@ -23,19 +23,32 @@ const form = document.getElementById("contactForm");
 form.addEventListener("submit", async (e) => {
   e.preventDefault();
 
+  const data = {
+    name: document.getElementById("name").value,
+    email: document.getElementById("email").value,
+    subject: document.getElementById("subject").value,
+    message: document.getElementById("message").value
+  };
+
   try {
+    // Firebase
     await addDoc(collection(db, "contacts"), {
-      name: document.getElementById("name").value,
-      email: document.getElementById("email").value,
-      subject: document.getElementById("subject").value,
-      message: document.getElementById("message").value,
+      ...data,
       createdAt: serverTimestamp()
     });
+
+    // EmailJS
+    await emailjs.send(
+      "Malu@123",
+      "template_vjl2ncj",
+      data
+    );
 
     alert("Message sent successfully!");
     form.reset();
 
   } catch (error) {
+    console.error(error);
     alert(error.message);
   }
 });
