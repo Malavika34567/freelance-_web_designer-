@@ -32,27 +32,34 @@ form.addEventListener("submit", async (e) => {
 
     console.log("Data:", data);
 
-    try {
+try {
 
-        await addDoc(collection(db, "contacts"), {
-            ...data,
-            createdAt: serverTimestamp()
-        });
+    await addDoc(collection(db, "contacts"), {
+        ...data,
+        createdAt: serverTimestamp()
+    });
 
-        const response = await emailjs.send(
-            "Malu@123",
-            "template_vjl2ncj",
-            data
-        );
+    const response = await emailjs.send(
+        "Malu@123",
+        "template_vjl2ncj",
+        {
+            name: data.name,
+            email: data.email,
+            subject: data.subject,
+            message: data.message
+        },
+        {
+            publicKey: "j2BjelD_TTXQQUYYq"
+        }
+    );
 
-        console.log(response);
+    console.log(response);
 
-        alert("Thank you! Your message has been sent successfully.");
+    alert("Thank you! Your message has been sent successfully.");
 
-        form.reset();
+    form.reset();
 
-    } catch (err) {
-        console.error(err);
-        alert(err.text || err.message);
-    }
-});
+} catch (err) {
+    console.error(err);
+    alert(err.text || err.message);
+}
