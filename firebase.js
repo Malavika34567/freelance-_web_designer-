@@ -7,7 +7,7 @@ import {
 } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-firestore.js";
 
 const firebaseConfig = {
-  apiKey: "YOUR_API_KEY",
+  apiKey: "AIzaSyBZ2r4kv9H8KndcEedQfD-kKbndOVNttPQ",
   authDomain: "freelance-web-designer-ff920.firebaseapp.com",
   projectId: "freelance-web-designer-ff920",
   storageBucket: "freelance-web-designer-ff920.firebasestorage.app",
@@ -21,46 +21,46 @@ const db = getFirestore(app);
 const form = document.getElementById("contactForm");
 
 form.addEventListener("submit", async (e) => {
-    e.preventDefault();
+  e.preventDefault();
 
-    const data = {
-        name: document.getElementById("name").value,
-        email: document.getElementById("email").value,
-        subject: document.getElementById("subject").value,
-        message: document.getElementById("message").value
-    };
+  const data = {
+    name: document.getElementById("name").value.trim(),
+    email: document.getElementById("email").value.trim(),
+    subject: document.getElementById("subject").value.trim(),
+    message: document.getElementById("message").value.trim()
+  };
 
-    console.log("Data:", data);
+  console.log("Sending Data:", data);
 
-try {
+  try {
 
+    // Save to Firestore
     await addDoc(collection(db, "contacts"), {
-        ...data,
-        createdAt: serverTimestamp()
+      ...data,
+      createdAt: serverTimestamp()
     });
 
-    const response = await emailjs.send(
-        "Malu@123",
-        "template_vjl2ncj",
-        {
-            name: data.name,
-            email: data.email,
-            subject: data.subject,
-            message: data.message
-        },
-        {
-            publicKey: "j2BjelD_TTXQQUYYq"
-        }
+    // Send Email using EmailJS
+    await emailjs.send(
+      "Malu@123",
+      "template_vjl2ncj",
+      {
+        name: data.name,
+        email: data.email,
+        subject: data.subject,
+        message: data.message
+      },
+      {
+        publicKey: "j2BjelD_TTXQQUYYq"
+      }
     );
-
-    console.log(response);
 
     alert("Thank you! Your message has been sent successfully.");
 
     form.reset();
 
-} catch (err) {
-    console.error(err);
-    alert(err.text || err.message);
-}
-}
+  } catch (error) {
+    console.error("Error:", error);
+    alert(error.text || error.message);
+  }
+});
